@@ -21,7 +21,7 @@ class Obstacle(Sprite):
 			self.rect.bottom = self.bg.sky_rect.centery
 
 	def _move_obstacle(self):
-		self.rect.x -= 8
+		self.rect.x -= 10
 
 	def destroy(self):
 		self.kill()

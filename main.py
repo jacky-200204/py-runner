@@ -1,6 +1,7 @@
 import pygame
 import sys
 import random
+from time import sleep
 
 from settings import Settings
 from background import Background
@@ -64,7 +65,10 @@ class Runner:
 		for obstacle in self.obstacles.sprites():
 			if obstacle.rect.x <= -100:
 				obstacle.destroy()
-		print(len(self.obstacles.sprites()))
+			if obstacle.rect.colliderect(self.player.rect):
+				self.obstacles.empty()
+				self.stats.game_active = False
+				sleep(0.5)
 
 
 if __name__ == "__main__":
