@@ -29,6 +29,7 @@ class Runner:
 	def run_game(self):
 		while True:
 				self._check_events()
+				self.obstacles.update()
 				self.player.update()
 				self._update_screen()
 
