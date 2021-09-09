@@ -1,5 +1,6 @@
 import pygame
 import sys
+import random
 
 from settings import Settings
 from background import Background
@@ -23,13 +24,15 @@ class Runner:
 
 		# Obstacle Group
 		self.obstacles = pygame.sprite.Group()
-		snail = Obstacle(self)
-		self.obstacles.add(snail)
+		# snail = Obstacle(self)
+		# self.obstacles.add(snail)
+		self.obstacle_timer = pygame.USEREVENT + 1
+		pygame.time.set_timer(self.obstacle_timer, 1500)
 
 	def run_game(self):
 		while True:
 				self._check_events()
-				self.obstacles.update()
+				self._update_obstacles()
 				self.player.update()
 				self._update_screen()
 
@@ -41,6 +44,8 @@ class Runner:
 			elif event.type == pygame.KEYDOWN:
 				if event.key == pygame.K_SPACE and self.player.check_bottom():
 					self.player.jump()
+			elif event.type == self.obstacle_timer:
+				self._create_obstacle()
 
 	def _update_screen(self):
 		self.bg.draw_bg()
@@ -48,6 +53,18 @@ class Runner:
 		self.obstacles.draw(self.screen)
 		pygame.display.flip()
 		self.clock.tick(30)
+
+	def _create_obstacle(self):
+		obstacle_type = random.choice(("snail", "snail", "fly", "snail"))
+		obstacle = Obstacle(self, obstacle_type)
+		self.obstacles.add(obstacle)
+
+	def _update_obstacles(self):
+		self.obstacles.update()
+		for obstacle in self.obstacles.sprites():
+			if obstacle.rect.x <= -100:
+				obstacle.destroy()
+		print(len(self.obstacles.sprites()))
 
 
 if __name__ == "__main__":
