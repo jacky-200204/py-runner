@@ -7,6 +7,7 @@ from settings import Settings
 from background import Background
 from player import Player
 from obstacle import Obstacle
+from game_stats import Stats
 
 
 class Runner:
@@ -20,6 +21,7 @@ class Runner:
 		pygame.display.set_caption("Pixel Runner")
 		self.clock = pygame.time.Clock()
 
+		self.stats = Stats()
 		self.bg = Background(self)
 		self.player = Player(self)
 
@@ -33,8 +35,9 @@ class Runner:
 	def run_game(self):
 		while True:
 				self._check_events()
-				self._update_obstacles()
-				self.player.update()
+				if self.stats.game_active:
+					self._update_obstacles()
+					self.player.update()
 				self._update_screen()
 
 	def _check_events(self):
@@ -49,9 +52,10 @@ class Runner:
 				self._create_obstacle()
 
 	def _update_screen(self):
-		self.bg.draw_bg()
-		self.player.draw()
-		self.obstacles.draw(self.screen)
+		if self.stats.game_active:
+			self.bg.draw_bg()
+			self.player.draw()
+			self.obstacles.draw(self.screen)
 		pygame.display.flip()
 		self.clock.tick(30)
 
@@ -66,9 +70,14 @@ class Runner:
 			if obstacle.rect.x <= -100:
 				obstacle.destroy()
 			if obstacle.rect.colliderect(self.player.rect):
+				sleep(0.5)
 				self.obstacles.empty()
 				self.stats.game_active = False
-				sleep(0.5)
+				self._draw_end_screen()
+
+	def _draw_end_screen(self):
+		self.screen.fill(self.settings.bg_color)
+		self.bg.draw_player()
 
 
 if __name__ == "__main__":
