@@ -33,6 +33,7 @@ class Background:
 		self.screen.blit(self.ground_img, self.ground_rect)
 
 	def draw_player(self):
+		self.screen.fill(self.settings.bg_color)
 		self.screen.blit(self.player_stop, self.player_rect)
 		self.screen.blit(self.game_logo, self.logo_rect)
 		self.screen.blit(self.again_msg, self.msg_rect)
